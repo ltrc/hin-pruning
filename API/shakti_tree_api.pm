@@ -46,7 +46,7 @@ sub read_story
 
 	$storyname = $_[0];
 
-        open(IN, "$storyname") or die ("Could not open the file $storyname to read\n");
+        open(IN, '<', $storyname) or die ("Could not open the file $storyname to read\n");
 
 	my @all_lines = <IN>;
 
