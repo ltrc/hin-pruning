@@ -1,11 +1,18 @@
 #/usr/bin/perl
-
-
+package prune;
+use Dir::Self;
+use lib __DIR__ . "/src";
+use lib __DIR__ . "/API";
 use Getopt::Long;
+use feature_filter;
+use shakti_tree_api;
+use prune_on_case qw(prune_on_case);
+use prune_on_pos qw(prune_on_pos);
+
 sub prune
 {
 
-	GetOptions("help!"=>\$help,"path=s"=>\$prune_home,"resource=s"=>\$db_file,"input=s"=>\$input,"output:s",\$output);
+	GetOptions("help!"=>\$help,"resource=s"=>\$db_file,"input=s"=>\$input,"output:s",\$output);
 	print "Unprocessed by Getopt::Long\n" if $ARGV[0];
 	foreach (@ARGV) {
 		print "$_\n";
@@ -15,32 +22,18 @@ sub prune
 	{
 		print "PRUNE - Pruning Version 1.9\n     (14th July 2007 last modified on 15th June 2010)\n\n";
 		print "usage : ./pruning.pl --path=\"prune_home path\" --resource=\"mapping file\" [--input=\"input_file\"] [--output=\"output_file\"] \n";
-		print "\t --path    : Path of the Pruning Directory\n";
 		print "\t --resource: Mapping file (data_bin/mapping.dat)\n";
 		print "\t --input   : Input file\n";
 		print "\t --output  : Output file\n";
 		exit(0);
 	}
 
-	if($prune_home eq "")
-	{
-		print "Please Specify the Path as defined in --help\n";
-		exit(0);
-
-	}
 	if($db_file eq "")
 	{
 		print "Please Specify the Path of the dat file\n";
 		exit(0);
 
 	}
-
-	$src="$prune_home/src";
-	$api="$prune_home/API";
-	require "$src/prune_on_pos.pl";
-	require "$src/prune_on_case.pl";
-	require "$api/shakti_tree_api.pl";
-	require "$api/feature_filter.pl";
 
 	if(!-e $db_file)
 	{
