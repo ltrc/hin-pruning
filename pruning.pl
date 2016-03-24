@@ -20,7 +20,7 @@ sub prune
 	if($help eq 1)
 	{
 		print "PRUNE - Pruning Version 1.9\n     (14th July 2007 last modified on 15th June 2010)\n\n";
-		print "usage : ./pruning.pl --path=\"prune_home path\" --resource=\"mapping file\" [--input=\"input_file\"] [--output=\"output_file\"] \n";
+		print "usage : ./pruning.pl --resource=\"mapping file\" [--input=\"input_file\"] [--output=\"output_file\"] \n";
 		print "\t --resource: Mapping file (data_bin/mapping.dat)\n";
 		print "\t --input   : Input file\n";
 		print "\t --output  : Output file\n";
