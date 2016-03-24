@@ -1,5 +1,4 @@
 #/usr/bin/perl
-package prune;
 use Dir::Self;
 use lib __DIR__ . "/src";
 use lib __DIR__ . "/API";
