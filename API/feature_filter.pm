@@ -1,10 +1,7 @@
-#!usr/bin/perl
 package feature_filter;
 use Exporter qw(import);
 
-our @EXPORT;
-
-@EXPORT = qw(
+our @EXPORT = qw(
         read_FS get_num_fs make_string
         get_fs_reference make_string_2 get_values
         get_values_2 add_attr_val_2 prune_FS

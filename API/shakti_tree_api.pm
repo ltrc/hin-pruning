@@ -1,9 +1,7 @@
 package shakti_tree_api;
 use Exporter qw(import);
 
-our @EXPORT;
-
-@EXPORT = qw(
+our @EXPORT = qw(
         read_story get_bodycount get_body
         get_paracount get_para get_sentcount
         get_sent get_leaves get_fields
