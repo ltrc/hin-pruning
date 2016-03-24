@@ -29,7 +29,7 @@ sub prune_on_pos
 {
 	$dat_file=@_[0];
 	$sent=@_[1];
-#	&print_tree();
+#	print_tree();
 	if(-e $dat_file )
 	{}
 	else
@@ -38,18 +38,18 @@ sub prune_on_pos
 		exit(0);
 	}
 	%mapping={};
-	$mapping_ref=&fill_hash($dat_file);
+	$mapping_ref=fill_hash($dat_file);
 	%mapping=%$mapping_ref;
 
 	my($parent);
 	my($fs,@attr,@index);
 
 	my @val=["\"NM\""];
-	@index = &get_leaves($sent);
+	@index = get_leaves($sent);
 	for($i=0 ; $i<=$#index ; $i++)
 	{
 		
-		($f0,$f1,$f2,$f3,$f4) = &get_fields($index[$i],$sent);
+		($f0,$f1,$f2,$f3,$f4) = get_fields($index[$i],$sent);
 		$ref_categories = $mapping{$f3};
 		@categories=@$ref_categories;
 		#print "f3= $f3 cat = $cat\n";
@@ -65,10 +65,10 @@ sub prune_on_pos
 			  $f4="<fs af='&ang,punc,,,,,,>";
 		}
 
-		$fs_ptr = &read_FS($f4,$sent);
+		$fs_ptr = read_FS($f4,$sent);
 	#	print $fs_ptr
-		$num_of_fs = &get_num_fs($fs_ptr,$sent);
-		$string=&make_string($fs_ptr,$sent);
+		$num_of_fs = get_num_fs($fs_ptr,$sent);
+		$string=make_string($fs_ptr,$sent);
 	#	print "HERE==$num_of_fs";
 	#	print "gsk";
 #my ($pflag, $sh_pflag, $Dflag, $nflag) = 0;
@@ -82,19 +82,19 @@ sub prune_on_pos
                         @value = split(/=/, $string);
                         @val=split(/ /,$value[1]);
         #               print "$value[0]one\ttwo$val[0]end";
-#               @attr = &get_values("cat",$fs_ptr,$sent);
+#               @attr = get_values("cat",$fs_ptr,$sent);
 #               print "Hello///$attr[0]mkd\n";
 		#	print "val==@val";
 #                if (($val[0])eq "punc")
 #                       {
                                 $string="<fs af='/,punc,,,,,,>";
-                                &modify_field($index[$i],4,$string,$sent);
+                                modify_field($index[$i],4,$string,$sent);
 #                       }
 #                       else
 #                       {
 #                      	#	print "$f2\tgsk\n";
 #                               $string= join"","<fs af='/,",$val[0],",,,,,,' poslcat='NM'>";
-#                               &modify_field($index[$i],4,$string,$sent);
+#                               modify_field($index[$i],4,$string,$sent);
 #
 #                       }
                 }
@@ -103,8 +103,8 @@ sub prune_on_pos
 		$flag=1;
 		if($num_of_fs==1)
 		{
-			@attr = &get_values("cat",$fs_ptr,$sent);
-			$string=&make_string($fs_ptr,$sent);
+			@attr = get_values("cat",$fs_ptr,$sent);
+			$string=make_string($fs_ptr,$sent);
 			foreach $cat (@categories)
 			{
 				if(($attr[0]) eq ($cat))
@@ -115,9 +115,9 @@ sub prune_on_pos
 			}
 			if($flag==1)
 			{
-				&add_attr_val("poslcat",@val,$fs_ptr,$sent);
-				$string=&make_string($fs_ptr,$sent);
-				&modify_field($index[$i],4,$string,$sent);
+				add_attr_val("poslcat",@val,$fs_ptr,$sent);
+				$string=make_string($fs_ptr,$sent);
+				modify_field($index[$i],4,$string,$sent);
 			}
 		}
 		if($num_of_fs>1)
@@ -130,10 +130,10 @@ sub prune_on_pos
 			for($j=$num_of_fs-1; $j>=0; $j--)
 			{
 				$flag=0;
-				$fs = &get_fs_reference($fs_ptr,$j,$sent);
-				$string=&make_string_2($fs,$sent);
+				$fs = get_fs_reference($fs_ptr,$j,$sent);
+				$string=make_string_2($fs,$sent);
 #				print "string $string\n";
-				@attr = &get_values_2("cat",$fs,$sent);
+				@attr = get_values_2("cat",$fs,$sent);
 				#if(@attr > 0 and lc($attr[0]) ne lc($cat))
 				foreach $cat (@categories)
 				{
@@ -146,9 +146,9 @@ sub prune_on_pos
 				}
 				if($flag==0 and $match!=1)
 				{
-					&add_attr_val_2("poslcat",@val,$fs,$sent);
-					$string=&make_string($fs_ptr,$sent);
-					&modify_field($index[$i],4,$string,$sent);
+					add_attr_val_2("poslcat",@val,$fs,$sent);
+					$string=make_string($fs_ptr,$sent);
+					modify_field($index[$i],4,$string,$sent);
 				}
 				if(($deleted_fs) == $num_of_fs)
 				{
@@ -162,10 +162,10 @@ sub prune_on_pos
 				for($j=$num_of_fs-1; $j>=0; $j--)
 				{
 					$flag=0;
-					$fs = &get_fs_reference($fs_ptr,$j,$sent);
-					$string=&make_string_2($fs,$sent);
+					$fs = get_fs_reference($fs_ptr,$j,$sent);
+					$string=make_string_2($fs,$sent);
 #					print "string $string\n";
-					@attr = &get_values_2("cat",$fs,$sent);
+					@attr = get_values_2("cat",$fs,$sent);
 					#if(@attr > 0 and lc($attr[0]) ne lc($cat))
 					foreach $cat (@categories)
 					{
@@ -178,7 +178,7 @@ sub prune_on_pos
 					if($flag==0)
 					{
 #						print "DELETED\n";
-						$ret=&prune_FS("",$j,$fs_ptr,$sent);
+						$ret=prune_FS("",$j,$fs_ptr,$sent);
 #						print "Return Value $ret\n";
 						$deleted_fs++;
 					}
@@ -191,16 +191,16 @@ sub prune_on_pos
 				}
 			}
 			my @catgry;
-			my @val_temp = &get_values("cat", $fs_ptr,$sent);
+			my @val_temp = get_values("cat", $fs_ptr,$sent);
 			if($val_temp[0] eq "")#check if already exist..
 			{
 				$catgry[0] = $cat;
 #print stderr "----> $cat\n";
-				&update_attr_val("cat",\@catgry,$fs_ptr);
+				update_attr_val("cat",\@catgry,$fs_ptr);
 			}
 
-			$string=&make_string($fs_ptr,$sent);
-			&modify_field($index[$i],4,$string,$sent);
+			$string=make_string($fs_ptr,$sent);
+			modify_field($index[$i],4,$string,$sent);
 		}
 		else
 		{
@@ -208,20 +208,20 @@ sub prune_on_pos
 			##cases in which morph does not give any category...
 			##we make sure that each lexical item has a category in the feature structure.
 			my @catgry;
-			my @val_temp = &get_values("cat", $fs_ptr,$sent);
+			my @val_temp = get_values("cat", $fs_ptr,$sent);
 			if($val_temp[0] eq "")#check if already exist..change only when 'cat' is empty
 			{
 				$catgry[0] = $cat;
-				&update_attr_val("cat",\@catgry,$fs_ptr,$sent);
+				update_attr_val("cat",\@catgry,$fs_ptr,$sent);
 			}
 
-			$string=&make_string($fs_ptr,$sent);
-			&modify_field($index[$i],4,$string,$sent);
+			$string=make_string($fs_ptr,$sent);
+			modify_field($index[$i],4,$string,$sent);
 
 		}
 		}
 	}
 	dbmclose(%mapping);
-#	&print_tree_file("prune_on_pos.tmp");
+#	print_tree_file("prune_on_pos.tmp");
 }
 1;

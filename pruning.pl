@@ -44,43 +44,43 @@ sub prune
 	{
 		$input="/dev/stdin";
 	}
-	&read_story($input);
+	read_story($input);
 
-	$numBody = &get_bodycount();
+	$numBody = get_bodycount();
 	for(my($bodyNum)=1;$bodyNum<=$numBody;$bodyNum++)
 	{
-		$body = &get_body($bodyNum,$body);
+		$body = get_body($bodyNum,$body);
 		# Count the number of Paragraphs in the story
-		my($numPara) = &get_paracount($body);
+		my($numPara) = get_paracount($body);
 		# Iterate through paragraphs in the story
 		for(my($i)=1;$i<=$numPara;$i++)
 		{
 			my($para);
 			# Read Paragraph
-			$para = &get_para($i);
+			$para = get_para($i);
 			# Count the number of sentences in this paragraph
-			my($numSent) = &get_sentcount($para);
+			my($numSent) = get_sentcount($para);
 			#print $numSent."\n";
 			# Iterate through sentences in the paragraph
 			for(my($j)=1;$j<=$numSent;$j++)
 			{
 				#print " ... Processing sent $j\n";
 				# Read the sentence which is in SSF format
-				my($sent) = &get_sent($para,$j);
-				#       &print_tree($sent);
-				&prune_on_pos($db_file,$sent);
-				&prune_on_case($sent);
+				my($sent) = get_sent($para,$j);
+				#       print_tree($sent);
+				prune_on_pos($db_file,$sent);
+				prune_on_case($sent);
 			}
 		}
 	}
 	if($output ne "")
 	{
-		&printstory_file("$output");
+		printstory_file("$output");
 	}
 	else
 	{
-		&printstory();
+		printstory();
 	}
 
 }
-&prune();
+prune();

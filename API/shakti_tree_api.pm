@@ -35,10 +35,10 @@ our @EXPORT = qw(
 #% hich corresponds to paragraph; this paragraph
 #% will have various sentences (for this we call the basic read())
 #% Each of these arrays' zeroth element contains the total element count in the array.
-#% &read_story($filename)
+#% read_story($filename)
 #%
 
-sub read_story()
+sub read_story
 {
 	my $line_count = 0;
         my $storyname;
@@ -197,9 +197,9 @@ sub read_story()
 			my($tRee);
 			# Litha Changes
 			# Orignal Statement
-			#$tRee = &read("tmp/sentSSF.$$");
-			$tRee = &read(\@sent);
-			my $dub_tree = &copy_tree($tRee);
+			#$tRee = read("tmp/sentSSF.$$");
+			$tRee = shakti_tree_api::read(\@sent);
+			my $dub_tree = copy_tree($tRee);
 			$_Story_[$body_num]->[$pnum]->[$sentnum] = $dub_tree;
 			$_Story_[$body_num]->[$pnum]->[0]->{'numSens'} = $sentnum;
                 }
@@ -251,9 +251,9 @@ sub read_story()
                 my($tRee);
 		# Litha Changes
                 # Orignal Statement
-                # $tRee = &read("tmp/sentSSF.$$");
-                $tRee = &read(\@sent);
-                my $dub_tree = &copy_tree($tRee);
+                # $tRee = read("tmp/sentSSF.$$");
+                $tRee = shakti_tree_api::read(\@sent);
+                my $dub_tree = copy_tree($tRee);
                 $_Story_[$body_num]->[$pnum]->[$sentnum] = $dub_tree;
                 $sentf = 0;
                 $_Story_[$body_num]->[$pnum]->[0]->{'numSens'} = $sentnum;
@@ -270,7 +270,7 @@ sub read_story()
 
 # Litha Changes
 # To print the sentence with given tb_no: and sent_id 
-sub printsentence()
+sub printsentence
 {
 	my $pnum = $_[0];
 	my $sent_id = $_[1];
@@ -282,14 +282,14 @@ sub printsentence()
 	for(my $i = 1;($i<=$StoryRef->[0]->{"body_count"}) && ($reach == 0);$i++)
 	{
 		my $paras = $StoryRef->[$i];
-                my $paracount = &get_paracount($paras);
+                my $paracount = get_paracount($paras);
 
 		if($pnum <= $paracount)
 		{
 			for(my $j = 1;($j<=$paracount) && ($reach == 0);$j++)
 			{
-				$para = &get_para($j);
-				my($numSent) = &get_sentcount($para);
+				$para = get_para($j);
+				my($numSent) = get_sentcount($para);
 				$paraf = 1;
 				if(($j == $pnum) || ($pnum == 0))
 				{
@@ -318,8 +318,8 @@ sub printsentence()
 		print "\nSentence: \n";
 		print "\ntb_ num: $tb_no\tSentence_id: $sent_id"."\n\n";
 
-		my($sent) = &get_sent($para,$sent_counter);
-		&print_tree($sent);
+		my($sent) = get_sent($para,$sent_counter);
+		print_tree($sent);
 		print "\n";
 	}
 	else{
@@ -339,14 +339,14 @@ sub printsentence()
 	}
 }
 
-sub get_paracount()
+sub get_paracount
 {
 	my $paras = $_[0];
 
 	return $#{$paras};
 }
 
-sub get_bodycount()
+sub get_bodycount
 {
 	my $StoryRef = $_[0];
 
@@ -357,7 +357,7 @@ sub get_bodycount()
 
 }
 
-sub get_body()
+sub get_body
 {
 	my($bodyNum) = $_[0];
 	my($StoryRef) = $_[1];
@@ -370,7 +370,7 @@ sub get_body()
 }
 
 
-sub get_para()
+sub get_para
 {
         my $paranum = $_[0];
         my $StoryRef = $_[1];
@@ -381,7 +381,7 @@ sub get_para()
         return $StoryRef->[1]->[$paranum];
 }
 
-sub get_sentcount()
+sub get_sentcount
 {
 	 my $ParaRef = $_[0];
 
@@ -389,7 +389,7 @@ sub get_sentcount()
         return $ParaRef->[0]->{'numSens'};
 }
 
-sub get_sent()
+sub get_sent
 {
         my $ParaRef = $_[0];
         my $sentnum = $_[1];
@@ -397,7 +397,7 @@ sub get_sent()
         return $ParaRef->[$sentnum];
 }
 
-sub print_para()
+sub print_para
 {
         my $paranum = $_[0];
 	my $StoryRef = $_[1];
@@ -421,7 +421,7 @@ sub print_para()
 	{
 		$sentcount++;
 		print "<Sentence id=\"$sentcount\">\n";
-		&print_tree($sentences->[$k]);
+		print_tree($sentences->[$k]);
 		print "</Sentence>\n";
 	}
 	#print "</p>\n\n";
@@ -431,7 +431,7 @@ sub print_para()
 
 }
 
-sub print_pararef()
+sub print_pararef
 {
         my $sentences = $_[0];
 	
@@ -444,7 +444,7 @@ sub print_pararef()
         {
         	$sentcount++;
                 print "<Sentence id=\"$sentcount\">\n";
-                &print_tree($sentences->[$k]);
+                print_tree($sentences->[$k]);
                 print "</Sentence>\n";
 	}
 	
@@ -455,7 +455,7 @@ sub print_pararef()
 }
 
 
-sub printstory()
+sub printstory
 {
 	my $StoryRef = $_[0];
 
@@ -473,7 +473,7 @@ sub printstory()
                 {
 			print "<body>\n\n";
 		}
-		my $paracount = &get_paracount($paras);
+		my $paracount = get_paracount($paras);
 
 		for(my $j = 1; $j <= $paracount; $j++)
 		{
@@ -500,7 +500,7 @@ sub printstory()
 					# Sriram change
 					print "<Sentence id=\"".$para->[0]->{'sent_Ids'}->[$k]."\">\n";
 				}
-				&print_tree($para->[$k]);
+				print_tree($para->[$k]);
 				if($para->[0]->{'sent_visible'} == 1)
                                 {
 					print "</Sentence>\n";
@@ -525,7 +525,7 @@ sub printstory()
 	print "$StoryRef->[0]->{\"last_line\"}";
 }
 
-sub printstory_file()
+sub printstory_file
 {
         my $outfile = $_[0];
         my $StoryRef = $_[1];
@@ -545,7 +545,7 @@ sub printstory_file()
                 {
                 	print OUT "<body>\n\n";
 		}
-		my $paracount = &get_paracount($paras);
+		my $paracount = get_paracount($paras);
 		for(my $j = 1; $j <= $paracount; $j++)
                 {
                         my $para = $paras->[$j];
@@ -568,7 +568,7 @@ sub printstory_file()
 					 print OUT "<Sentence id=\"".$para->[0]->{'sent_Ids'}->[$k]."\">\n";
 					close(OUT);
 				}
-                                &print_tree_file(">>$outfile", $para->[$k]);
+                                print_tree_file(">>$outfile", $para->[$k]);
 			        open(OUT, ">>$outfile") or die("could not open the file $outfile to write\n");
 				if($para->[0]->{'sent_visible'} == 1)
                                 {
@@ -595,7 +595,7 @@ sub printstory_file()
 }
 
 
-sub copy_story()         # This will copy the entire story and return a reference to that story.
+sub copy_story         # This will copy the entire story and return a reference to that story.
 {
         my @copyStory;
         my $StoryRef=$_[0];
@@ -633,9 +633,9 @@ sub copy_story()         # This will copy the entire story and return a referenc
 }
 
 #% Reads the file into the data-structure @_TREE_
-#% &read ([$filename])
+#% read ([$filename])
 #% 
-sub read()
+sub read
 {
 	my @Load;
 	# Litha Changes
@@ -674,13 +674,13 @@ sub read()
 	}
 
 	$_TREE_[$nElements][2]="))";
-	&assign_reach(\@_TREE_);
+	assign_reach(\@_TREE_);
 }
 
 # Assign the zeroth and the first field
-# &assign_reach( [$tree] )
+# assign_reach( [$tree] )
 #
-sub assign_reach()			
+sub assign_reach			
 {
 	my $TreeRef=$_[0];		# Reference to the tree structure.
 	my @markerArray;
@@ -727,18 +727,18 @@ sub assign_reach()
 }
 
 #% Prints the data-structure
-#% &print_tree( [$tree] )	-nil-
+#% print_tree( [$tree] )	-nil-
 #%
 
-sub print_tree()
+sub print_tree
 {
 	my $TreeRef=$_[0];
 	my ($zeroth,$first,$second,$third,$fourth);
 
 	if(not(defined($_[0])))
 	{	$TreeRef=\@_TREE_;	}
-	&assign_reach($TreeRef);
-	&assign_readable_numbers($TreeRef);
+	assign_reach($TreeRef);
+	assign_readable_numbers($TreeRef);
 	for(my $i=1;$i<scalar(@$TreeRef)-1;$i++)
 	{
 		$first=$$TreeRef[$i][1];
@@ -753,11 +753,11 @@ sub print_tree()
 }
 
 #% Prints the data structure to a file
-#% &print_tree_file($filename,[$tree])	-nil-
+#% print_tree_file($filename,[$tree])	-nil-
 #	$filename can be ">>abc.tmp" for appending to a file
 #% Added by Aseem - 12/9/04
 
-sub print_tree_file()
+sub print_tree_file
 
 {
 
@@ -776,8 +776,8 @@ sub print_tree_file()
 	else {
 		open(FILE,">$FileRef");
 	}
-        &assign_reach($TreeRef);
-        &assign_readable_numbers($TreeRef);
+        assign_reach($TreeRef);
+        assign_readable_numbers($TreeRef);
         for(my $i=1;$i<@$TreeRef-1;$i++)
         {
                 $first=$$TreeRef[$i][1];
@@ -791,34 +791,34 @@ sub print_tree_file()
 }
 
 #% Changes the numbers in the first field 
-#% &assign_readable_numbers([$tree])	-> -nil-
+#% assign_readable_numbers([$tree])	-> -nil-
 #% Nothing is returned
 #%
 
-sub assign_readable_numbers()
+sub assign_readable_numbers
 {
 	my $TreeRef=$_[0];
 	if(not(defined($_[0])))
 	{	$TreeRef=\@_TREE_;	}
 
 
-	my @childNodes=&get_children(0,$TreeRef);
+	my @childNodes=get_children(0,$TreeRef);
 
 	for(my $i=1;$i<=@childNodes;$i++)
 	{
-		&modify_field($childNodes[$i-1],1,$i,$TreeRef);	
-		&reorder_numbers($childNodes[$i-1],$i,$TreeRef);
+		modify_field($childNodes[$i-1],1,$i,$TreeRef);	
+		reorder_numbers($childNodes[$i-1],$i,$TreeRef);
 	}
 
 	return;
 }
 
 #% Changes the numbers in the first field 
-#% &assign_readable_numbers($node,$parentNumber,[$tree])	-> -nil-
+#% assign_readable_numbers($node,$parentNumber,[$tree])	-> -nil-
 #% Nothing is returned
 #%
 
-sub reorder_numbers()
+sub reorder_numbers
 {
 	my $index=$_[0];
 	my $parent=$_[1];
@@ -827,25 +827,25 @@ sub reorder_numbers()
 	if(not(defined($_[2])))
 	{	$TreeRef=\@_TREE_; 	}
 	
-	my @childNodes=&get_children($index,$TreeRef);
+	my @childNodes=get_children($index,$TreeRef);
 
 	if(@childNodes==0)
 	{	return; 	}
 
 	for(my $i=1;$i<=@childNodes;$i++)
 	{
-		&modify_field($childNodes[$i-1],1,$parent.".".$i,$TreeRef);
-		&reorder_numbers($childNodes[$i-1],$parent.".".$i,$TreeRef);
+		modify_field($childNodes[$i-1],1,$parent.".".$i,$TreeRef);
+		reorder_numbers($childNodes[$i-1],$parent.".".$i,$TreeRef);
 	}
 	
 	return;
 }
 
 
-#% &print_node($index,[$tree])
+#% print_node($index,[$tree])
 #% 
 
-sub print_node()
+sub print_node
 {
 	my ($zeroth,$first,$second,$third,$fourth);
 	my $index=$_[0];
@@ -854,7 +854,7 @@ sub print_node()
 	if(not(defined($_[0])))
 	{	$TreeRef=\@_TREE_;	}
 
-	my $nextPosition=&get_next_node($index,$TreeRef);
+	my $nextPosition=get_next_node($index,$TreeRef);
 
 	for(my $i=$index;$i<$nextPosition;$i++)
 	{
@@ -868,10 +868,10 @@ sub print_node()
 }
 
 #% Gets the children nodes
-#% &get_children( $node , [$tree] )  -> @children_nodes;
+#% get_children( $node , [$tree] )  -> @children_nodes;
 #% To get children of root, $node = 0;
 #%
-sub get_children()
+sub get_children
 {
 	my $node=$_[0];			# Passing the node number is compulsory.
 	my $TreeRef=$_[1];		# This is a reference to the tree array.
@@ -897,9 +897,9 @@ sub get_children()
 }
 
 #% Gets the Leaf nodes
-#% &get_leaves( [$tree] )  -> @leaf_nodes;
+#% get_leaves( [$tree] )  -> @leaf_nodes;
 #%
-sub get_leaves()
+sub get_leaves
 {
 	my $TreeRef=$_[0];
 	my @leafArray;
@@ -919,7 +919,7 @@ sub get_leaves()
 	return @leafArray;		# Return the reference to the leaf array.
 }
 
-sub get_leaves_child()
+sub get_leaves_child
 {
 	my $TreeRef=$_[1];
 	my $index=$_[0];
@@ -942,9 +942,9 @@ sub get_leaves_child()
 }
 
 #% Get the nodes which have a particular field-value.
-#% &get_nodes( $fieldnumber , $value , [$tree] ) -> @required_nodes
+#% get_nodes( $fieldnumber , $value , [$tree] ) -> @required_nodes
 #%
-sub get_nodes()
+sub get_nodes
 {
 	my $index=$_[0];
 	my $value=$_[1];
@@ -964,10 +964,10 @@ sub get_nodes()
 }
 
 #% Get the nodes which have a particular field-value.
-#% &get_nodes_pattern( $fieldnumber , $value , [$tree] ) -> @required_nodes
+#% get_nodes_pattern( $fieldnumber , $value , [$tree] ) -> @required_nodes
 #%
 
-sub get_nodes_pattern()
+sub get_nodes_pattern
 {
 	my $index=$_[0];
 	my $value=$_[1];
@@ -987,9 +987,9 @@ sub get_nodes_pattern()
 }
 
 #% Deletes a node
-#% &delete_node( $node , [$tree] )
+#% delete_node( $node , [$tree] )
 #%
-sub delete_node()
+sub delete_node
 {
 	# We delete a node from the referred tree itself 
 	# We do not give a copy of the tree.
@@ -1030,14 +1030,14 @@ sub delete_node()
 	{	pop(@$TreeRef);		}
 
 
-	&assign_reach($TreeRef);
+	assign_reach($TreeRef);
 	return;					# We return nothing.
 }
 
 #% Create a parent for a sequence of nodes 
-#% &create_parent( $node_start , $node_end , $tag , [$tree] );
+#% create_parent( $node_start , $node_end , $tag , [$tree] );
 #%
-sub create_parent()
+sub create_parent
 {
 	my $startIndex=$_[0];
 	my $endIndex=$_[1];	# Specify the ending index
@@ -1078,14 +1078,14 @@ sub create_parent()
 	$$TreeRef[$endIndex][1]="";
 	$$TreeRef[$endIndex][2]="))";
 
-	&assign_reach($TreeRef);	# Modify the Reach values in the tree.
+	assign_reach($TreeRef);	# Modify the Reach values in the tree.
 	return $startIndex;
 }
 
 #% Delete the parent but keep the children
-#% &delete_layer ( $node , [$tree] )
+#% delete_layer ( $node , [$tree] )
 #%
-sub delete_layer()
+sub delete_layer
 {
 	my $index=$_[0];
 	my $TreeRef=$_[1];
@@ -1120,15 +1120,15 @@ sub delete_layer()
 	}
 
 #	$nElements=@$TreeRef;
-	&assign_reach($TreeRef);		# Modify the reach values.
+	assign_reach($TreeRef);		# Modify the reach values.
 
 	return;
 }
 
 #% Creates a new tree
-#% &create_tree;  -> $empty_tree;
+#% create_tree;  -> $empty_tree;
 #%
-sub create_tree()
+sub create_tree
 {
 	# The 3 fields of a node are sent by the user.
 
@@ -1150,9 +1150,9 @@ sub create_tree()
 }
 
 #%
-#% &add_tree
+#% add_tree
 #%
-sub add_tree()			# Found a bug on 29th Oct 2003 and fixed on the same day.
+sub add_tree			# Found a bug on 29th Oct 2003 and fixed on the same day.
 {
 	my $addNodeRef=$_[0];	# This is the reference array from which the values are added into the present tree
 	my $position=$_[1];
@@ -1188,13 +1188,13 @@ sub add_tree()			# Found a bug on 29th Oct 2003 and fixed on the same day.
 		$$TreeRef[$i]=$$addNodeRef[$i-$position+1];	# The reason we add 1 to the index id because 
 	}							# The tree has A starting (( SSF and closing )) which 
 								# are to be left out.
-	&assign_reach($TreeRef);	# Modify the Reach values in the tree.
+	assign_reach($TreeRef);	# Modify the Reach values in the tree.
 }
 
 #%
-#% &add_node ( $tree , $sibling_node , $direction (0/1) ,[$tree]) -> $index_node
+#% add_node ( $tree , $sibling_node , $direction (0/1) ,[$tree]) -> $index_node
 #%
-sub add_node()
+sub add_node
 {
 	my $addNodeRef=$_[0];		# This is the reference array from which the values are added into the present tree
 	my $position=$_[1];
@@ -1233,13 +1233,13 @@ sub add_node()
 		}
 	}						
 							
-	&assign_reach($TreeRef);	# Modify the Reach values in the tree.
+	assign_reach($TreeRef);	# Modify the Reach values in the tree.
 }
 
 #% Get's all the fields of a given leaf/node
-#% &get_fields ( $node , [$tree] ) -> ($zeroth,$first,$second,$third,$fourth)
+#% get_fields ( $node , [$tree] ) -> ($zeroth,$first,$second,$third,$fourth)
 #%
-sub get_fields()
+sub get_fields
 {
 	my $node=$_[0];
 	my $TreeRef=$_[1];
@@ -1254,9 +1254,9 @@ sub get_fields()
 }
 
 #% Get a particular field of a leaf/node
-#% &get_field ( $node , $fieldnumber , [$tree] ) -> $value_of_field
+#% get_field ( $node , $fieldnumber , [$tree] ) -> $value_of_field
 #%
-sub get_field()
+sub get_field
 {
 	my $node=$_[0];
 	my $index=$_[1];
@@ -1271,9 +1271,9 @@ sub get_field()
 }
 
 #% Modify a particular field of a leaf/node
-#% &modify_field( $node , $fieldnumber , $value , [$tree] )
+#% modify_field( $node , $fieldnumber , $value , [$tree] )
 #%
-sub modify_field()
+sub modify_field
 {
 	my $node = $_[0];
 	my $index = $_[1];
@@ -1289,10 +1289,10 @@ sub modify_field()
 }
 
 #% Copy a node as another tree
-#% &copy ( $node ) -> $tree
+#% copy ( $node ) -> $tree
 #% If entire tree has to be copied, $node = 0
 #%
-sub copy()			# This creates a copy of the node specified and returns the corresponding
+sub copy			# This creates a copy of the node specified and returns the corresponding
 {					# Two dimensional array.
 	my $nodeIndex=$_[0];
 	my $TreeRef=$_[1];
@@ -1322,16 +1322,16 @@ sub copy()			# This creates a copy of the node specified and returns the corresp
 }
 
 #% Move a node to a particular place
-#% &move_node( $node , $node2 , $direction , [$tree] )
+#% move_node( $node , $node2 , $direction , [$tree] )
 #% $direction = 0 if before the sibiling, 1 if after ths sibling
 #%
-sub move_node()
+sub move_node
 {
 	my $nodeIndex=$_[0];
 	my $node2=$_[1];
 	my $direction=$_[2];		# The direction is either "up" or "down"
 	my $TreeRef=$_[3];
-	my $nodeCopy=&copy($nodeIndex);
+	my $nodeCopy=copy($nodeIndex);
 	$tempCopy=$nodeCopy;
 
 	if(not(defined($_[3])))
@@ -1345,22 +1345,22 @@ sub move_node()
 		{
 			$node2=$node2-$$TreeRef[$nodeIndex][0];
 		}
-		&delete_node($nodeIndex,$TreeRef);	# the new position is $nodeIndex-$numberOfPositions.
-		&add_node($nodeCopy,$node2,"0",$TreeRef);
+		delete_node($nodeIndex,$TreeRef);	# the new position is $nodeIndex-$numberOfPositions.
+		add_node($nodeCopy,$node2,"0",$TreeRef);
 # e.g. if numberOfPositions is 3 then node will be inserted above the third position. from the present node.
 	}
 	elsif($direction eq "1")
 	{			# It will be moved to the position below the specified number of positions.
 		my $reachValue=$$TreeRef[$nodeIndex][0];
-		&add_node($nodeCopy,$node2,"1",$TreeRef);
+		add_node($nodeCopy,$node2,"1",$TreeRef);
 
 		if($node2<$nodeIndex)
 		{
-			&delete_node($nodeIndex+$reachValue,$TreeRef);
+			delete_node($nodeIndex+$reachValue,$TreeRef);
 		}
 		else
 		{
-			&delete_node($nodeIndex,$TreeRef);
+			delete_node($nodeIndex,$TreeRef);
 		}
 # e.g. if numberOfPositions is 3 then node will be inserted below the third position. from the present node.
 	}
@@ -1375,7 +1375,7 @@ sub move_node()
 #% Copy the entire tree
 #% copy_tree ( [$tree] ) -> $tree2
 #%
-sub copy_tree()		# This will copy the entire tree and return a reference to that tree.
+sub copy_tree		# This will copy the entire tree and return a reference to that tree.
 {
 	my @copyTree;
 	my $TreeRef=$_[0];
@@ -1397,9 +1397,9 @@ sub copy_tree()		# This will copy the entire tree and return a reference to that
 }
 
 #% Gets the parent of a node
-#% &get_parent( $node , [$tree] ) -> $parent_node
+#% get_parent( $node , [$tree] ) -> $parent_node
 #%
-sub get_parent()			# Gets the index of the parent to the node specified.
+sub get_parent			# Gets the index of the parent to the node specified.
 {
 	my $nodeIndex=$_[0];
 	my $TreeRef=$_[1];
@@ -1437,9 +1437,9 @@ sub get_parent()			# Gets the index of the parent to the node specified.
 }
 
 #% Gets the next sibling
-#% &get_next_node( $node , [$tree] ) -> $next_node
+#% get_next_node( $node , [$tree] ) -> $next_node
 #%
-sub get_next_node()		# Gets the index of the sibling (of the node specified) present below the present one.
+sub get_next_node		# Gets the index of the sibling (of the node specified) present below the present one.
 {
 	my $nodeIndex=$_[0];
 	my $TreeRef=$_[1];
@@ -1461,9 +1461,9 @@ sub get_next_node()		# Gets the index of the sibling (of the node specified) pre
 
 
 #% Gets the previous sibling
-#% &get_previous_node( $node , [$tree] ) -> $previous_node
+#% get_previous_node( $node , [$tree] ) -> $previous_node
 #%
-sub get_previous_node()
+sub get_previous_node
 {
 	my $nodeIndex=$_[0];
 	my $TreeRef=$_[1];
@@ -1481,7 +1481,7 @@ sub get_previous_node()
 		return $nodeIndex-1;		 # A minus one is returned in case of $nodeIndex of 0.
 	}
 
-	my $parent=&get_parent($nodeIndex);	 # If its previous node happens to be a more complicated node then.
+	my $parent=get_parent($nodeIndex);	 # If its previous node happens to be a more complicated node then.
 
 	if($parent eq -1)
 	{	return -1;	}
@@ -1500,9 +1500,9 @@ sub get_previous_node()
 }
 
 #% Adds a leaf before/after a node
-#% &add_leaf( $node , $direction[0/1] , $f2 , $f3, $f4)
+#% add_leaf( $node , $direction[0/1] , $f2 , $f3, $f4)
 #%
-sub add_leaf()
+sub add_leaf
 {
 	my $position=$_[0];
 	my $direction=$_[1];
@@ -1542,10 +1542,10 @@ sub add_leaf()
 	$$TreeRef[$position][3]=$f3;	
 	$$TreeRef[$position][4]=$f4;	
 
-	&assign_reach($TreeRef);
+	assign_reach($TreeRef);
 }
 
-sub change_old_new()
+sub change_old_new
 {
 	my $TreeRef=$_[0];
 	if(not(defined($_[0])))
@@ -1556,15 +1556,15 @@ sub change_old_new()
 	for(my $i=0;$i<@$TreeRef;$i++)
 	{
 		my $featureStructure=$$TreeRef[$i][4];
-		my $reference=&read_FS_old($featureStructure);
-		my $convertedFeature=&make_string($reference);
+		my $reference=read_FS_old($featureStructure);
+		my $convertedFeature=make_string($reference);
 		$$TreeRef[$i][4]=$convertedFeature;
 	}
 	
 	return;
 }
 
-sub change_new_old()
+sub change_new_old
 {
 	my $TreeRef=$_[0];
 	if(not(defined($_[0])))
@@ -1575,15 +1575,15 @@ sub change_new_old()
 	for(my $i=0;$i<@$TreeRef;$i++)
 	{
 		my $featureStructure=$$TreeRef[$i][4];
-		my $reference=&read_FS($featureStructure);
-		my $convertedFeature=&make_string_old($reference);
+		my $reference=read_FS($featureStructure);
+		my $convertedFeature=make_string_old($reference);
 		$$TreeRef[$i][4]=$convertedFeature;
 	}
 
 	return;
 }
 
-sub delete_tree() {
+sub delete_tree {
 	undef(@_TREE_);
 }
 

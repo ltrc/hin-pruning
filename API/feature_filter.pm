@@ -17,21 +17,21 @@ our @EXPORT = qw(
 #% a reference to an or array is returned.
 #
 #
-my $ref_to_fs = &read_FS("<  fs    af='xe,v,f,s,any,,ne,yA' drel=k1:1|k2    vibh=ne|ko|se  >");
-my @fff = &get_values("lex", $ref_to_fs);
+my $ref_to_fs = read_FS("<  fs    af='xe,v,f,s,any,,ne,yA' drel=k1:1|k2    vibh=ne|ko|se  >");
+my @fff = get_values("lex", $ref_to_fs);
 
 #print stderr $fff[0]."\n";
-my $new_fs = &make_string($ref_to_fs);
+my $new_fs = make_string($ref_to_fs);
 #print stderr "NEW=$new_fs\n";
 
 
-sub read_FS()
+sub read_FS
 {
 	local (@_STRING_,$_INDEX_);
 	my $featureString=$_[0];
 	
 	#temporary
-	$featureString = &convert_to_old($featureString);
+	$featureString = convert_to_old($featureString);
 
 	$featureString=~s/af=(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)([\/>])/lex=$1\/cat=$2\/gen=$3\/num=$4\/per=$5\/cas=$6\/vib=$7\/tam=$8$9/g;
 	
@@ -40,14 +40,14 @@ sub read_FS()
 
 	$_INDEX_=0;
 	my %hashRef;
-	$hashRef=&load_hash();
+	$hashRef=load_hash();
 	return $$hashRef{'ROOT'};
 }
 
 #the module takes the new xml format and converts it to the old one,
 #this seems to be a temporary solution,
 #like this only the printer needs to be modified, everything remains same.
-sub convert_to_old()
+sub convert_to_old
 {
 	my $col_fs = $_[0];
 #	print stderr "Original: $col_fs\n";
@@ -88,7 +88,7 @@ sub read_FS_old()
 	}
 	$featureStructure=~s/^\|<\|//g;
 	$featureStructure=~s/\/\s*$/>/g;
-	my $ref=&read_FS($featureStructure);
+	my $ref=read_FS($featureStructure);
 	my $newString="";
 	return $ref;
 }
@@ -98,7 +98,7 @@ sub read_FS_old()
 #% The array that is returned can contain both values as well as reference to other featurestructures.
 #% The returned array is an OR array.
 
-sub get_values()
+sub get_values
 {
 	my $featurePath=$_[0];
 	my $arrayRef=$_[1];
@@ -107,8 +107,8 @@ sub get_values()
 	$hash{'ROOT'}=$arrayRef;
 
 	my @ReturnedArray;
-	#@ReturnedArray=&get_values_hash($featurePath,\%hash);
-	return &get_values_2($featurePath,\%hash);
+	#@ReturnedArray=get_values_hash($featurePath,\%hash);
+	return get_values_2($featurePath,\%hash);
 	#return @ReturnedArray;
 }
 
@@ -117,7 +117,7 @@ sub get_values()
 #% The array that is returned can contain both values as well as reference to other featurestructures.
 #% The returned array is an OR array.
 
-sub get_values_2()
+sub get_values_2
 {
 	#Feature path is given as follows:
 	#a1.a2.a3.....
@@ -144,7 +144,7 @@ sub get_values_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				$newReturnArray[$i]=&copyFS($$arrayRef[$i]);
+				$newReturnArray[$i]=copyFS($$arrayRef[$i]);
 			}
 			else
 			{
@@ -163,7 +163,7 @@ sub get_values_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				push(@RetArray,&get_values_2($nextPath,$$arrayRef[$i]));
+				push(@RetArray,get_values_2($nextPath,$$arrayRef[$i]));
 			}
 		}
 
@@ -176,7 +176,7 @@ sub get_values_2()
 #% of feature structures.
 #%
 
-sub get_attributes()
+sub get_attributes
 {
 	my $hashRef=$_[0];
 	my @attributes=keys(%$hashRef);
@@ -198,7 +198,7 @@ sub get_attributes()
 #% field 0 contains the path 
 #% field 1 contains the value.	<This is the copied value>
 
-sub get_path_values()
+sub get_path_values
 {
 	my $attr=$_[0];
 	my $arrayRef=$_[1];
@@ -206,7 +206,7 @@ sub get_path_values()
 	my %hash;
 	$hash{'ROOT'}=$arrayRef;
 	my @retArray;
-	@retArray=&get_path_values_2($attr,\%hash);
+	@retArray=get_path_values_2($attr,\%hash);
 
 	for(my $i=0;$i<@retArray;$i++)
 	{
@@ -220,7 +220,7 @@ sub get_path_values()
 #% field 0 contains the path 
 #% field 1 contains the value.	<This is the copied value>
 
-sub get_path_values_2()
+sub get_path_values_2
 {
 	my $attr=$_[0];
 	my $hashRef=$_[1];
@@ -244,9 +244,9 @@ sub get_path_values_2()
 			{
 				if(ref($$arrayRef[$i]) eq "HASH")
 				{
-					$newArray[$i]=&copyFS($$arrayRef[$i]);
+					$newArray[$i]=copyFS($$arrayRef[$i]);
 					my @toPushArray;
-					@toPushArray=&get_path_values_2($attr,$$arrayRef[$i],$newPath);
+					@toPushArray=get_path_values_2($attr,$$arrayRef[$i],$newPath);
 					for(my $i=0;$i<@toPushArray;$i++)
 					{
 						$RetArray[$count][0]=$toPushArray[$i][0];
@@ -271,9 +271,9 @@ sub get_path_values_2()
 			{
 				if(ref($$arrayRef[$i]) eq "HASH")
 				{
-					$newArray[$i]=&copyFS($$arrayRef[$i]);
+					$newArray[$i]=copyFS($$arrayRef[$i]);
 					my @toPushArray;
-					@toPushArray=&get_path_values_2($attr,$$arrayRef[$i],$newPath);
+					@toPushArray=get_path_values_2($attr,$$arrayRef[$i],$newPath);
 					for(my $i=0;$i<@toPushArray;$i++)
 					{
 						$RetArray[$count][0]=$toPushArray[$i][0];
@@ -291,7 +291,7 @@ sub get_path_values_2()
 #% copyFS($fs) --> Reference of a new FS
 #% Copies fs into a new fs and returns that.
 
-sub copyFS()
+sub copyFS
 {
 	my $hashRef=$_[0];
 	my %newHash;
@@ -307,7 +307,7 @@ sub copyFS()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				$newArray[$i]=&copyFS($$arrayRef[$i]);
+				$newArray[$i]=copyFS($$arrayRef[$i]);
 			}
 			else
 			{
@@ -326,7 +326,7 @@ sub copyFS()
 #%	$value is a reference to an OR array. The values in the array will be either normal strings or references to other
 #%	featurestructures (hashes)
 
-sub add_attr_val()
+sub add_attr_val
 {
 	my $featurePath=$_[0];
 	my $val=$_[1];
@@ -334,7 +334,7 @@ sub add_attr_val()
 	my %hash;
 	$featurePath="ROOT.".$featurePath;
 	$hash{'ROOT'}=$arrayRef;
-	&add_attr_val_2($featurePath,$val,\%hash);
+	add_attr_val_2($featurePath,$val,\%hash);
 
 	return;
 }
@@ -343,7 +343,7 @@ sub add_attr_val()
 #%	$value is a reference to an OR array. The values in the array will be either normal strings or references to other
 #%	featurestructures (hashes)
 
-sub add_attr_val_2()
+sub add_attr_val_2
 {
 	my $featurePath=$_[0];
 	my $val=$_[1];						# This value has to be a reference to an array.
@@ -369,7 +369,7 @@ sub add_attr_val_2()
 			{
 				if(ref($$val[$i]) eq "HASH")
 				{
-					$$arrayRef[$i+$prevNumber]=&copyFS($$val[$i]);
+					$$arrayRef[$i+$prevNumber]=copyFS($$val[$i]);
 				}
 				else
 				{
@@ -385,7 +385,7 @@ sub add_attr_val_2()
 			{
 				if(ref($$val[$i]) eq "HASH")
 				{
-					$$arrayAdd[$i]=&copyFS($$val[$i]);
+					$$arrayAdd[$i]=copyFS($$val[$i]);
 				}
 				else
 				{
@@ -407,7 +407,7 @@ sub add_attr_val_2()
 				if(ref($$arrayRef[$i]) eq "HASH")
 				{
 					$entered=1;
-					$arrayRef[$i]=&add_attr_val_2($nextPath,$val,$$arrayRef[$i]);
+					$arrayRef[$i]=add_attr_val_2($nextPath,$val,$$arrayRef[$i]);
 				}
 			}
 
@@ -417,7 +417,7 @@ sub add_attr_val_2()
 				my @arrayAdd;
 				$arrayAdd[0]=\%hash;
 				push(@$arrayRef,@arrayAdd);
-				&add_attr_val_2($nextPath,$val,$arrayAdd[0]);
+				add_attr_val_2($nextPath,$val,$arrayAdd[0]);
 			}
 			return;
 		}
@@ -427,7 +427,7 @@ sub add_attr_val_2()
 			my @arrayAdd;
 			$arrayAdd[0]=\%hash;
 			$$hashRef{$presAttr}=\@arrayAdd;
-			&add_attr_val_2($nextPath,$val,\%hash);
+			add_attr_val_2($nextPath,$val,\%hash);
 		}
 	}
 }
@@ -437,7 +437,7 @@ sub add_attr_val_2()
 #% 	The value in the featurepath specified will be changed to the new val.
 #%	If that val is not present then it is added.
 
-sub update_attr_val()
+sub update_attr_val
 {
 	my $featurePath=$_[0];
 	my $val=$_[1];						# This value has to be a reference to an array.
@@ -446,7 +446,7 @@ sub update_attr_val()
 	my %hash;
 	$hash{'ROOT'}=$arrayRef;
 	
-	&update_attr_val_2($featurePath,$val,\%hash);
+	update_attr_val_2($featurePath,$val,\%hash);
 	return;
 }
 
@@ -454,7 +454,7 @@ sub update_attr_val()
 #% 	The value in the featurepath specified will be changed to the new val.
 #%	If that val is not present then it is added.
 
-sub update_attr_val_2()
+sub update_attr_val_2
 {
 	my $featurePath=$_[0];
 	my $val=$_[1];						# This value has to be a reference to an array.
@@ -480,7 +480,7 @@ sub update_attr_val_2()
 			{
 				if(ref($$val[$i]) eq "HASH")
 				{
-					$arrayAdd[$i]=&copyFS($$val[$i]);
+					$arrayAdd[$i]=copyFS($$val[$i]);
 				}
 				else
 				{
@@ -500,7 +500,7 @@ sub update_attr_val_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				&update_attr_val_2($nextPath,$val,$$arrayRef[$i]);
+				update_attr_val_2($nextPath,$val,$$arrayRef[$i]);
 			}
 		}
 
@@ -512,21 +512,21 @@ sub update_attr_val_2()
 #% FSReference is the OR node reference
 #% Deletes the value in the attribute specified by the path.
 
-sub del_attr_val()
+sub del_attr_val
 {
 	my $featurePath=$_[0];
 	my $arrayRef=$_[1];
 	$featurePath="ROOT.".$featurePath;
 	my %hash;
 	$hash{'ROOT'}=$arrayRef;
-	&del_attr_val_2($featurePath,\%hash);
+	del_attr_val_2($featurePath,\%hash);
 return;
 }
 
 #% del_attr_val_2($featurePath,$FSReference)
 #% Deletes the value in the attribute specified by the path.
 
-sub del_attr_val_2()	
+sub del_attr_val_2	
 {
 	my $featurePath=$_[0];
 	my $hashRef=$_[1];
@@ -564,7 +564,7 @@ sub del_attr_val_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				&del_attr_val_2($nextPath,$$arrayRef[$i]);
+				del_attr_val_2($nextPath,$$arrayRef[$i]);
 			}
 		}
 
@@ -579,7 +579,7 @@ sub del_attr_val_2()
 #% $fs3 is either -1 or a reference to a new or node of feature structures.
 #% -1 is returned in the case that the featurestructures cannot be unified.
 
-sub unify()
+sub unify
 {
 	my $firstRef=$_[0];
 	my $secondRef=$_[1];
@@ -588,7 +588,7 @@ sub unify()
 	$hash1{'ROOT'}=$firstRef;
 	$hash2{'ROOT'}=$secondRef;
 
-	$hashRef=&unify_2(\%hash1,\%hash2);
+	$hashRef=unify_2(\%hash1,\%hash2);
 	if($hashRef!=-1)
 	{
 		return $$hashRef{'ROOT'};
@@ -604,7 +604,7 @@ sub unify()
 #% $fs3 is either -1 or a reference to a new feature structure.
 #% -1 is returned in the case that the featurestructures cannot be unified.
 
-sub unify_2()	
+sub unify_2	
 {
 	my $firstRef=$_[0];
 	my $secondRef=$_[1];
@@ -628,7 +628,7 @@ sub unify_2()
 		{
 			if(ref($$valArrayRef1[0]) eq "HASH" and ref($$valArrayRef2[0]) eq "HASH")
 			{
-				$retVal=&unify_2($$valArrayRef1[0],$$valArrayRef2[0]);
+				$retVal=unify_2($$valArrayRef1[0],$$valArrayRef2[0]);
 
 				if($retVal!=-1)
 				{
@@ -692,7 +692,7 @@ sub unify_2()
 				{	$arrayAdd[$i]=$$arrayRef[$i];	}
 				else
 				{
-					$arrayAdd[$i]=&copyFS($$arrayRef[$i]);
+					$arrayAdd[$i]=copyFS($$arrayRef[$i]);
 				}
 			}
 			$hash{$key}=\@arrayAdd;
@@ -707,13 +707,13 @@ sub unify_2()
 #% Changes all the values of fs1 to that of fs2 for all the common attributes in fs1 and fs2
 #% Rest of the values are left untouched.
 
-sub merge()
+sub merge
 {
 	my $firstRef=$_[0];
 	my $secondRef=$_[1];
 	my (%hash1,%hash2);
 
-	&merge_2($$firstRef[0],$$secondRef[0]);
+	merge_2($$firstRef[0],$$secondRef[0]);
 	return;
 }
 
@@ -721,7 +721,7 @@ sub merge()
 #% Changes all the values of fs1 to that of fs2 for all the common attributes in fs1 and fs2
 #% Rest of the values are left untouched.
 
-sub merge_2()
+sub merge_2
 {
 	my $firstRef=$_[0];
 	my $secondRef=$_[1];
@@ -738,7 +738,7 @@ sub merge_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				$newArray[$i]=&copyFS($$arrayRef[$i]);	# Change the value of one to that in two.
+				$newArray[$i]=copyFS($$arrayRef[$i]);	# Change the value of one to that in two.
 			}
 			else
 			{
@@ -754,10 +754,10 @@ sub merge_2()
 	return;
 }
 
-#% load_hash()
+#% load_hash
 #% Loads the string passed to a hash and the reference to that hash is returned.
 
-sub load_hash()
+sub load_hash
 {
 	if($_STRING_[$_INDEX_] ne "<")
 	{
@@ -808,7 +808,7 @@ sub load_hash()
 
 			while(1)					# Continue until the loop breaks.
 			{
-				$arrayVal[$arrayMarker]=&load_hash();
+				$arrayVal[$arrayMarker]=load_hash();
 
 				while($_STRING_[$_INDEX_]=~/\s+/)
 				{
@@ -845,7 +845,7 @@ sub printFS_SSF()
 	my $arrayRef=$_[0];
 	my $finalString;
 
-	$finalString=&make_string($arrayRef);
+	$finalString=make_string($arrayRef);
 	print "$finalString\n";
 }
 
@@ -857,7 +857,7 @@ sub printFS_SSF_2()
 {
 	my $finalString;
 	my $FSRef=$_[0];
-	$finalString=&make_string_2($FSRef);
+	$finalString=make_string_2($FSRef);
 	print "$finalString \n";
 }
 
@@ -865,7 +865,7 @@ sub printFS_SSF_2()
 #% $FSReference is the array reference returned by the read_FS function.
 #% $stringRef is reference to a string into which you want to get the string.
 
-sub make_string()
+sub make_string
 {
 	my $arrayRef=$_[0];
 	my $string;
@@ -873,7 +873,7 @@ sub make_string()
 
 	for(my $i=0;$i<@$arrayRef;$i++)
 	{
-		$string.=&make_string_2($$arrayRef[$i])."|";
+		$string.=make_string_2($$arrayRef[$i])."|";
 	}
 
 	$string=~s/\|$//g;
@@ -885,7 +885,7 @@ sub make_string()
 	return $string;
 }
 
-sub make_string_2()
+sub make_string_2
 {
 	my $hashRef=$_[0];
 	my @keyValues;
@@ -917,7 +917,7 @@ sub make_string_2()
 			{
 				if(ref($$arrayRef[$j]) eq "HASH")
 				{
-					$String.=&make_string_2($$arrayRef[$j]);
+					$String.=make_string_2($$arrayRef[$j]);
 				}
 				else
 				{
@@ -977,7 +977,7 @@ sub make_string_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				$String.=&make_string_2($$arrayRef[$i]);
+				$String.=make_string_2($$arrayRef[$i]);
 			}
 			else
 			{
@@ -1019,7 +1019,7 @@ sub make_string_2()
 #% +1 indicates successful completion of the function
 #% -1 indicates that such a feature path does not exist.
 
-sub prune_FS()
+sub prune_FS
 {
 	my $featurePath=$_[0];
 	my $fieldNumber=$_[1];
@@ -1028,7 +1028,7 @@ sub prune_FS()
 	$featurePath="ROOT.".$featurePath;
 	my %hash;
 	$hash{'ROOT'}=$arrayRef;
-	return &prune_FS_2($featurePath,$fieldNumber,\%hash);
+	return prune_FS_2($featurePath,$fieldNumber,\%hash);
 }
 
 
@@ -1037,7 +1037,7 @@ sub prune_FS()
 #% +1 indicates successful completion of the function
 #% -1 indicates that such a feature path does not exist.
 
-sub prune_FS_2()	
+sub prune_FS_2	
 {
 	my $featurePath=$_[0];
 	my $fieldNumber=$_[1];
@@ -1098,7 +1098,7 @@ sub prune_FS_2()
 		{
 			if(ref($$arrayRef[$i]) eq "HASH")
 			{
-				&prune_FS_2($nextPath,$fieldNumber,$$arrayRef[$i]);
+				prune_FS_2($nextPath,$fieldNumber,$$arrayRef[$i]);
 			}
 		}
 
@@ -1112,7 +1112,7 @@ sub prune_FS_2()
 #% $index_... is field you want from the array.
 #%
 
-sub get_fs_reference()
+sub get_fs_reference
 {
 	my $refArray=$_[0];
 	my $index=$_[1];
@@ -1123,7 +1123,7 @@ sub get_fs_reference()
 #% get_num_fs($ref_to_array)  --> number of feature structures (Or values also)
 #% 
 
-sub get_num_fs()
+sub get_num_fs
 {
 	my $refArray=$_[0];
 	my $number=@$refArray;
@@ -1134,13 +1134,13 @@ sub get_num_fs()
 #% $fs is a reference to an or node containing multiple possible feature structures.
 #% prints the attributes and values present in the hash in the standard format.
 
-sub printFS_SSF_old()
+sub printFS_SSF_old
 {
 	my $arrayRef=$_[0];
 	my $finalString;
 	# In the old format we do not have nested feature structures inside the bigger feature structures.
 
-	$finalString=&make_string($arrayRef);
+	$finalString=make_string($arrayRef);
 	my $featureStructure;
 
 
@@ -1158,13 +1158,13 @@ sub printFS_SSF_old()
 	print "$featureStructure\n";
 }
 
-sub make_string_old()
+sub make_string_old
 {
 	my $arrayRef=$_[0];
 	my $finalString;
 	# In the old format we do not have nested feature structures inside the bigger feature structures.
 
-	$finalString=&make_string($arrayRef);
+	$finalString=make_string($arrayRef);
 	my $featureStructure;
 
 
