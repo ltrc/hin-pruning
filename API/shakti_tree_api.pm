@@ -40,7 +40,10 @@ our @EXPORT = qw(
 
 sub read_story
 {
+        @_Story_ = ();
+
 	my $line_count = 0;
+        my $sentnum = 0;
         my $storyname;
 	my $first_l,$second_l,$third_l,$last_line,$meta;
 
